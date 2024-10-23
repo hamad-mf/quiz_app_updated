@@ -22,15 +22,15 @@ class QuestionsScreen extends StatefulWidget {
 class _QuestionsScreenState extends State<QuestionsScreen> {
   int questionIndex = 0;
   int? selectedAnswerIndex;
-  double _currentValue = 10;
+  double _currentValue = 1;
+  int rightanswerC = 0;
   CountDownController timercontroller = CountDownController();
 
   void progressbar() {
     setState(() {
-      if (_currentValue + 10 <= 100) {
-        _currentValue += 10;
-      } else {
-        _currentValue = 100;
+      if (_currentValue <
+          DummyDb.categoryQuestions[widget.selectedCategory]!.length) {
+        _currentValue += 1;
       }
     });
   }
@@ -51,19 +51,24 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           children: [
             Row(
               children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: ColorConstants.mainblack,
-                    border:
-                        Border.all(width: 1, color: ColorConstants.maingrey),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.close,
-                    color: ColorConstants.mainwhite,
-                    size: 30,
+                InkWell(
+                  onTap: () {
+                    print(questions.length);
+                  },
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: ColorConstants.mainblack,
+                      border:
+                          Border.all(width: 1, color: ColorConstants.maingrey),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.close,
+                      color: ColorConstants.mainwhite,
+                      size: 30,
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -81,6 +86,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                           children: [
                             Expanded(
                               child: FAProgressBar(
+                                maxValue: questions.length.toDouble(),
                                 size: 20,
                                 backgroundColor: Colors.grey,
                                 currentValue: _currentValue,
@@ -135,7 +141,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                   child: CircularCountDownTimer(
                     isReverseAnimation: true,
 
-                    duration: 10, // Set your duration
+                    duration: 30,
                     initialDuration: 0,
                     controller: timercontroller,
                     width: 70,
@@ -154,9 +160,11 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                     isTimerTextShown: true,
                     onComplete: () {
                       progressbar();
+                      
                       selectedAnswerIndex = null;
                       if (questionIndex < questions.length - 1) {
                         questionIndex++;
+                        timercontroller.restart();
                         setState(() {});
                       } else {
                         Navigator.pushReplacement(
@@ -164,6 +172,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                             MaterialPageRoute(
                                 builder: (context) => ResultScreen(
                                       righanswercount: 4,
+                                      selectedCategory: widget.selectedCategory,
                                     )));
                       }
                       timercontroller.restart();
@@ -184,6 +193,10 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                       onTap: () {
                         if (selectedAnswerIndex == null) {
                           selectedAnswerIndex = optionIndex;
+                          if (selectedAnswerIndex ==
+                              currentQuestion["answerIndex"]) {
+                            rightanswerC++;
+                          }
                           setState(() {});
                           print(selectedAnswerIndex);
                         }
@@ -235,7 +248,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ResultScreen(
-                                  righanswercount: 4,
+                                  righanswercount: rightanswerC,
+                                  selectedCategory: widget.selectedCategory,
                                 )));
                   }
                 },

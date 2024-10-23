@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
-
 import 'package:quiz_app_updated/Utils/Color_constants.dart';
+import 'package:quiz_app_updated/View/Home%20Screen/home_screen.dart';
 
 import 'package:quiz_app_updated/dummy_db.dart';
 
 class ResultScreen extends StatefulWidget {
   final int righanswercount;
-  const ResultScreen({super.key, required this.righanswercount});
+  final String selectedCategory;
+  const ResultScreen(
+      {super.key,
+      required this.righanswercount,
+      required this.selectedCategory});
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
@@ -16,8 +20,9 @@ class ResultScreen extends StatefulWidget {
 class _ResultScreenState extends State<ResultScreen> {
   int starCount = 0;
   calculateStarCount() {
-    var percentage =
-        (widget.righanswercount / DummyDb.categoryQuestions.length) * 100;
+    var percentage = (widget.righanswercount /
+            DummyDb.categoryQuestions[widget.selectedCategory]!.length) *
+        100;
 
     if (percentage > 80) {
       starCount = 3;
@@ -81,7 +86,7 @@ class _ResultScreenState extends State<ResultScreen> {
           height: 7,
         ),
         Text(
-          "6 / 13",
+          "${widget.righanswercount} / ${DummyDb.categoryQuestions[widget.selectedCategory]!.length}",
           style: TextStyle(
               color: ColorConstants.yellowText,
               fontWeight: FontWeight.bold,
@@ -97,35 +102,44 @@ class _ResultScreenState extends State<ResultScreen> {
             //   Navigator.pushReplacement(context,
             //       MaterialPageRoute(builder: (context) => QuestionsScreen()));
             // },
-            child: Container(
-              height: 50,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: ColorConstants.mainwhite,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 15,
-                    backgroundColor: ColorConstants.mainblack,
-                    child: Icon(
-                      Icons.refresh,
-                      color: ColorConstants.mainwhite,
+            child: InkWell(
+              onTap: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  (Route route) => false,
+                );
+              },
+              child: Container(
+                height: 50,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: ColorConstants.mainwhite,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 15,
+                      backgroundColor: ColorConstants.mainblack,
+                      child: Icon(
+                        Icons.refresh,
+                        color: ColorConstants.mainwhite,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    "Retry",
-                    style: TextStyle(
-                        color: ColorConstants.mainblack,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18),
-                  )
-                ],
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Retry",
+                      style: TextStyle(
+                          color: ColorConstants.mainblack,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

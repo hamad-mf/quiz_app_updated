@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // Number of columns
+                  crossAxisCount: 2,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
@@ -130,13 +130,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   String category = categories[index];
                   return GestureDetector(
                     onTap: () {
-                      
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => QuestionsScreen(
                             selectedCategory:
-                                category, // Pass the selected category
+                                category, // pass the selected ctgry
                           ),
                         ),
                       );
@@ -147,8 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                                Icons.category), // You can use logos/icons here
+                            Icon(Icons.category),
                             SizedBox(height: 10),
                             Text(
                               category,
